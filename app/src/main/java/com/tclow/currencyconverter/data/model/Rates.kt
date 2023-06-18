@@ -1,11 +1,13 @@
 package com.tclow.currencyconverter.data.model
 
-import com.mynameismidori.currencypicker.ExtendedCurrency
+import androidx.room.*
+import java.io.Serializable
 
-class Rates {
-    var currencyRate: String? = null
+@Entity(tableName = "Rates")
+class Rates: Serializable {
+    @PrimaryKey(autoGenerate = false)
+    var currencyCode: String? = null
 
-    public fun getCurrencyRate(): String {
-        return ExtendedCurrency.getCurrencyByISO(currencyRate).code
-    }
+    @ColumnInfo(name = "rates")
+    var rates: Int? = null
 }
