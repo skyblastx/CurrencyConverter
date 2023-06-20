@@ -4,8 +4,11 @@ import com.tclow.currencyconverter.data.CurrencyApi
 import com.tclow.currencyconverter.data.model.CurrencyResponse
 import com.tclow.currencyconverter.util.Resource
 import java.lang.Exception
+import javax.inject.Inject
 
-class CurrencyRepository(private var api: CurrencyApi) : BaseRepository {
+class CurrencyRepository @Inject constructor(
+    private var api: CurrencyApi
+) : BaseRepository {
 
     override suspend fun getRates(base: String): Resource<CurrencyResponse> {
         return try {
