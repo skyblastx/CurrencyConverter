@@ -55,8 +55,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun getRateForCurrency(requestCurrency: String, rates: Map<String, Double>): Double {
-        var result: Double = 0.00
+    private fun getRateForCurrency(requestCurrency: String, rates: Map<String, Double>): Double? {
+        var result: Double? = null
 
         for ((currency, rate) in rates) {
             if (requestCurrency == currency) {

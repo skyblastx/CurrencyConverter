@@ -6,13 +6,15 @@ import com.tclow.currencyconverter.util.Resource
 import java.lang.Exception
 import javax.inject.Inject
 
+private const val ACCESS_KEY = "c789c2ab33a432024bd7ff8938b92139"
 class CurrencyRepository @Inject constructor(
     private var api: CurrencyApi
 ) : BaseRepository {
 
     override suspend fun getRates(base: String): Resource<CurrencyResponse> {
         return try {
-            val response = api.getRates()
+            val data = getDataMapForQuery(base)
+            val response = api.getRates(data)
             val result = response.body()
             if (response.isSuccessful && result != null) {
                 Resource.Success(result)
@@ -22,5 +24,14 @@ class CurrencyRepository @Inject constructor(
         } catch (e: Exception) {
             Resource.Error(e.message ?: "An error occurred")
         }
+    }
+
+    private fun getDataMapForQuery(base: String): Map<String, String> {
+        val data = mutableMapOf<String, String>()
+
+        data["access_key"] = ACCESS_KEY
+        data["base"] = base
+
+        return data
     }
 }
