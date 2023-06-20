@@ -1,46 +1,71 @@
 package com.tclow.currencyconverter
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.tclow.currencyconverter.ui.theme.CurrencyConverterTheme
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import com.hbb20.countrypicker.dialog.launchCountryPickerDialog
+import com.hbb20.countrypicker.models.CPCountry
+import com.tclow.currencyconverter.databinding.ActivityMainBinding
+import com.tclow.currencyconverter.main.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : ComponentActivity() {
+
+@AndroidEntryPoint
+class MainActivity: AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            CurrencyConverterTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setUpButtonListeners()
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.conversion.collect { event ->
+                when (event) {
+                    is MainViewModel.CurrencyEvent.Success -> {
+                        binding.progressBar.isVisible = false
+                        binding.mainTxtResult.setTextColor(Color.BLACK)
+                        binding.mainTxtResult.text = event.resultText
+                    }
+                    is MainViewModel.CurrencyEvent.Failure -> {
+                        binding.progressBar.isVisible = false
+                        binding.mainTxtResult.setTextColor(Color.RED)
+                        binding.mainTxtResult.text = event.errorText
+                    }
+                    is MainViewModel.CurrencyEvent.Loading -> {
+                        binding.progressBar.isVisible = true
+                    }
+                    else -> Unit
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    private fun setUpButtonListeners() {
+        binding.mainBtnFrom.setOnClickListener {
+            launchCountryPickerDialog { selectedCountry: CPCountry? ->
+                binding.mainBtnFrom.text = selectedCountry?.currencyCode
+            }
+        }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CurrencyConverterTheme {
-        Greeting("Android")
+        binding.mainBtnTo.setOnClickListener {
+            launchCountryPickerDialog { selectedCountry: CPCountry? ->
+                binding.mainBtnTo.text = selectedCountry?.currencyCode
+            }
+        }
+
+        binding.btnConvert.setOnClickListener {
+            viewModel.convert(
+                binding.mainAmt.text.toString(),
+                binding.mainBtnFrom.text.toString(),
+                binding.mainBtnTo.text.toString()
+            )
+        }
     }
 }
