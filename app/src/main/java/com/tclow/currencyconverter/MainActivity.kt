@@ -8,9 +8,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.hbb20.countrypicker.dialog.launchCountryPickerDialog
 import com.hbb20.countrypicker.models.CPCountry
+import com.tclow.currencyconverter.database.RateDatabase
 import com.tclow.currencyconverter.databinding.ActivityMainBinding
 import com.tclow.currencyconverter.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 
 @AndroidEntryPoint
@@ -26,6 +28,13 @@ class MainActivity: AppCompatActivity() {
         setUpButtonListeners()
 
         lifecycleScope.launchWhenStarted {
+            // Get rates immediately
+            if (RateDatabase.getDatabase(this@MainActivity).rateDAO().getRatesWithDate(LocalDate.now().toString()).isEmpty())
+            {
+                viewModel.getRates(this@MainActivity)
+                binding.mainLblTodayRates.text = "Today's rates has been updated."
+            }
+
             viewModel.conversion.collect { event ->
                 when (event) {
                     is MainViewModel.CurrencyEvent.Success -> {
@@ -62,6 +71,7 @@ class MainActivity: AppCompatActivity() {
 
         binding.btnConvert.setOnClickListener {
             viewModel.convert(
+                this,
                 binding.mainAmt.text.toString(),
                 binding.mainBtnFrom.text.toString(),
                 binding.mainBtnTo.text.toString()

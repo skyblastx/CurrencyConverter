@@ -20,6 +20,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/main_lbl_today_rates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Today's rates is not updated yet."
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
         android:id="@+id/main_from_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
