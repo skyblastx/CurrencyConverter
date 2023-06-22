@@ -5,12 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.tclow.currencyconverter.data.model.Rates
+import com.tclow.currencyconverter.database.converter.HashMapConverter
 import com.tclow.currencyconverter.database.converter.RateConverter
+import com.tclow.currencyconverter.database.dao.CurrencyRate
 import com.tclow.currencyconverter.database.dao.RateDAO
 
-@Database(entities = [Rates::class], version = 1, exportSchema = false)
-@TypeConverters(RateConverter::class)
+@Database(entities = [CurrencyRate::class], version = 1, exportSchema = false)
+@TypeConverters(RateConverter::class, HashMapConverter::class)
 abstract class RateDatabase: RoomDatabase() {
 
     companion object{
