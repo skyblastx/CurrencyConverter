@@ -20,15 +20,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/main_lbl_today_rates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="Today's rates is not updated yet."
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
         android:id="@+id/main_from_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.27" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <Button
         android:id="@+id/main_btn_from"
@@ -123,5 +114,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnConvert"
         tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/main_chart_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@id/btnConvert"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
